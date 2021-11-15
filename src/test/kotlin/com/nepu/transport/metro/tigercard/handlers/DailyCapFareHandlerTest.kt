@@ -182,6 +182,61 @@ class DailyCapFareHandlerTest {
     }
 
     @Test
+    fun `should not apply daily cap for the trips on the other day`() {
+        val trip1 = Trip(
+                commuterId = 1,
+                tripDateTime = ZonedDateTime.of(2021, Month.NOVEMBER.value, 8, 10, 20,
+                        0, 0, ZoneId.of("UTC")),
+                fromZone = ZONE_1,
+                toZone = ZONE_1
+        )
+        val trip2 = Trip(
+                commuterId = 1,
+                tripDateTime = ZonedDateTime.of(2021, Month.NOVEMBER.value, 8, 10, 45,
+                        0, 0, ZoneId.of("UTC")),
+                fromZone = ZONE_1,
+                toZone = ZONE_1
+        )
+        val trip3 = Trip(
+                commuterId = 1,
+                tripDateTime = ZonedDateTime.of(2021, Month.NOVEMBER.value, 8, 16, 15,
+                        0, 0, ZoneId.of("UTC")),
+                fromZone = ZONE_1,
+                toZone = ZONE_1
+        )
+        val trip4 = Trip(
+                commuterId = 1,
+                tripDateTime = ZonedDateTime.of(2021, Month.NOVEMBER.value, 8, 18, 15,
+                        0, 0, ZoneId.of("UTC")),
+                fromZone = ZONE_1,
+                toZone = ZONE_1
+        )
+        val trip5 = Trip(
+                commuterId = 1,
+                tripDateTime = ZonedDateTime.of(2021, Month.NOVEMBER.value, 9, 19, 0,
+                        0, 0, ZoneId.of("UTC")),
+                fromZone = ZONE_1,
+                toZone = ZONE_1
+        )
+        val trip6 = Trip(
+                commuterId = 1,
+                tripDateTime = ZonedDateTime.of(2021, Month.NOVEMBER.value, 9, 19, 15,
+                        0, 0, ZoneId.of("UTC")),
+                fromZone = ZONE_1,
+                toZone = ZONE_1
+        )
+
+        fareCapHandler.handle(listOf(trip1, trip2, trip3, trip4, trip5, trip6))
+
+        Assertions.assertEquals(30, trip1.calculatedFare)
+        Assertions.assertEquals(25, trip2.calculatedFare)
+        Assertions.assertEquals(25, trip3.calculatedFare)
+        Assertions.assertEquals(20, trip4.calculatedFare)
+        Assertions.assertEquals(30, trip5.calculatedFare)
+        Assertions.assertEquals(30, trip6.calculatedFare)
+    }
+
+    @Test
     fun `should set the next handler correctly`() {
         val mockHandler = Mockito.mock(FareCapHandler::class.java)
         val trips = listOf(Trip(

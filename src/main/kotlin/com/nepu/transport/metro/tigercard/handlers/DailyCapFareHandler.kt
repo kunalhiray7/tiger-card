@@ -15,26 +15,19 @@ class DailyCapFareHandler : FareCapHandler {
             it.baseFare = it.fromZone.getBaseFareTo(it.toZone, it.tripDateTime)
             it.calculatedFare = it.baseFare
 
-            if (date == it.tripDateTime.toLocalDate()) {
-                // apply daily cap for trips in the same day
-                if (dayFare + it.calculatedFare >= maxCapWithNewDayIndex.first) {
-                    it.calculatedFare = maxCapWithNewDayIndex.first - dayFare
-                    dayFare = maxCapWithNewDayIndex.first
-                } else {
-                    dayFare += it.calculatedFare
-                }
-            } else {
+            if (date != it.tripDateTime.toLocalDate()) {
                 // new day
                 // get max cap for the week
                 dayFare = 0
                 date = it.tripDateTime.toLocalDate()
                 maxCapWithNewDayIndex = getMaxCapForTrips(sortedTrips, maxCapWithNewDayIndex.second)
-                if (dayFare + it.calculatedFare >= maxCapWithNewDayIndex.first) {
-                    it.calculatedFare = maxCapWithNewDayIndex.first - dayFare
-                    dayFare = maxCapWithNewDayIndex.first
-                } else {
-                    dayFare += it.calculatedFare
-                }
+            }
+
+            if (dayFare + it.calculatedFare >= maxCapWithNewDayIndex.first) {
+                it.calculatedFare = maxCapWithNewDayIndex.first - dayFare
+                dayFare = maxCapWithNewDayIndex.first
+            } else {
+                dayFare += it.calculatedFare
             }
         }
 

@@ -1,4 +1,4 @@
-package com.affinidi.pgsel.migrationservice.utils
+package com.nepu.transport.metro.tigercard.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule

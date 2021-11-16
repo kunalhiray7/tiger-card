@@ -1,6 +1,6 @@
 package com.nepu.transport.metro.tigercard.controllers
 
-import com.affinidi.pgsel.migrationservice.utils.ObjectMapperUtil.getObjectMapper
+import com.nepu.transport.metro.tigercard.utils.ObjectMapperUtil.getObjectMapper
 import com.nepu.transport.metro.tigercard.dtos.TripFareCalculationRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

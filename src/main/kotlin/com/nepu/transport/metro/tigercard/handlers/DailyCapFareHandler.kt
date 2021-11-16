@@ -17,7 +17,7 @@ class DailyCapFareHandler : FareCapHandler {
 
             if (date != it.tripDateTime.toLocalDate()) {
                 // new day
-                // get max cap for the week
+                // get max cap for the same day trips
                 dayFare = 0
                 date = it.tripDateTime.toLocalDate()
                 maxCapWithNewDayIndex = getMaxCapForTrips(sortedTrips, maxCapWithNewDayIndex.second)

@@ -1,6 +1,6 @@
 package com.nepu.transport.metro.tigercard.serializers
 
-import com.affinidi.pgsel.migrationservice.utils.ObjectMapperUtil.getObjectMapper
+import com.nepu.transport.metro.tigercard.utils.ObjectMapperUtil.getObjectMapper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.ZoneOffset.UTC

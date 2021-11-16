@@ -1,7 +1,8 @@
 package com.nepu.transport.metro.tigercard.controllers
 
-import com.nepu.transport.metro.tigercard.utils.ObjectMapperUtil.getObjectMapper
+import com.nepu.transport.metro.tigercard.domain.Zone.ZONE_1
 import com.nepu.transport.metro.tigercard.dtos.TripFareCalculationRequest
+import com.nepu.transport.metro.tigercard.utils.ObjectMapperUtil.getObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.InjectMocks
@@ -29,7 +30,7 @@ class TripControllerTest {
 
     @Test
     fun `POST should call the endpoint to calculate the fare`() {
-        val request = TripFareCalculationRequest(1, 1, 1, ZonedDateTime.now())
+        val request = TripFareCalculationRequest(1, ZONE_1, ZONE_1, ZonedDateTime.now())
 
         mockMvc.perform(post("/api/v1/trips")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,38 +1,40 @@
 package com.nepu.transport.metro.tigercard.handlers
 
 import com.nepu.transport.metro.tigercard.domain.Trip
+import java.time.LocalDate
 
 class DailyCapFareHandler : FareCapHandler {
     private lateinit var nextHandler: FareCapHandler
+    private lateinit var maxCapWithNewDayIndex: Pair<Int, Int>
+    private var dayFare: Int = 0
+    private lateinit var currentDay: LocalDate
 
-    override fun handle(trips: List<Trip>) {
-        val sortedTrips = trips.sortedBy { it.tripDateTime }
-        var dayFare = 0
-        var maxCapWithNewDayIndex = getMaxCapForTrips(sortedTrips, 0)
-        var date = sortedTrips[0].tripDateTime.toLocalDate()
+    override fun handleTrip(currentTrip: Trip, allTrips: List<Trip>) {
+        currentTrip.baseFare = currentTrip.fromZone.getBaseFareTo(currentTrip.toZone, currentTrip.tripDateTime)
+        currentTrip.calculatedFare = currentTrip.baseFare
 
-        sortedTrips.forEach {
-            it.baseFare = it.fromZone.getBaseFareTo(it.toZone, it.tripDateTime)
-            it.calculatedFare = it.baseFare
-
-            if (date != it.tripDateTime.toLocalDate()) {
-                // new day
-                // get max cap for the same day trips
-                dayFare = 0
-                date = it.tripDateTime.toLocalDate()
-                maxCapWithNewDayIndex = getMaxCapForTrips(sortedTrips, maxCapWithNewDayIndex.second)
-            }
-
-            if (dayFare + it.calculatedFare >= maxCapWithNewDayIndex.first) {
-                it.calculatedFare = maxCapWithNewDayIndex.first - dayFare
-                dayFare = maxCapWithNewDayIndex.first
-            } else {
-                dayFare += it.calculatedFare
-            }
+        if(!this::maxCapWithNewDayIndex.isInitialized && !this::currentDay.isInitialized) {
+            maxCapWithNewDayIndex = getMaxCapForTrips(allTrips, 0)
+            currentDay = currentTrip.tripDateTime.toLocalDate()
         }
 
-        if (::nextHandler.isInitialized) {
-            nextHandler.handle(trips)
+        if (currentDay != currentTrip.tripDateTime.toLocalDate()) {
+            // new day
+            // get max cap for the same day trips
+            dayFare = 0
+            currentDay = currentTrip.tripDateTime.toLocalDate()
+            maxCapWithNewDayIndex = getMaxCapForTrips(allTrips, maxCapWithNewDayIndex.second)
+        }
+
+        if (dayFare + currentTrip.calculatedFare >= maxCapWithNewDayIndex.first) {
+            currentTrip.calculatedFare = maxCapWithNewDayIndex.first - dayFare
+            dayFare = maxCapWithNewDayIndex.first
+        } else {
+            dayFare += currentTrip.calculatedFare
+        }
+
+        if(this::nextHandler.isInitialized) {
+            nextHandler.handleTrip(currentTrip, allTrips)
         }
     }
 

@@ -4,6 +4,7 @@ import com.nepu.transport.metro.tigercard.domain.Trip
 import com.nepu.transport.metro.tigercard.domain.Zone.ZONE_1
 import com.nepu.transport.metro.tigercard.domain.Zone.ZONE_2
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import java.time.Month
@@ -12,7 +13,12 @@ import java.time.ZonedDateTime
 
 class DailyCapFareHandlerTest {
 
-    private val fareCapHandler = DailyCapFareHandler()
+    private lateinit var fareCapHandler: FareCapHandler
+
+    @BeforeEach
+    fun setUp() {
+        fareCapHandler = DailyCapFareHandler()
+    }
 
     @Test
     fun `should return the fare without applying daily cap if cap is not reached`() {
@@ -31,10 +37,9 @@ class DailyCapFareHandlerTest {
                 toZone = ZONE_2
         )
 
-        fareCapHandler.handle(listOf(trip1, trip2))
+        fareCapHandler.handleTrip(trip1, listOf(trip1, trip2))
 
         Assertions.assertEquals(35, trip1.calculatedFare)
-        Assertions.assertEquals(35, trip2.calculatedFare)
     }
 
     @Test
@@ -75,7 +80,9 @@ class DailyCapFareHandlerTest {
                 toZone = ZONE_2
         )
 
-        fareCapHandler.handle(listOf(trip1, trip2, trip3, trip4, trip5))
+        val trips = listOf(trip1, trip2, trip3, trip4, trip5)
+        trips.forEach { fareCapHandler.handleTrip(it, trips) }
+
 
         Assertions.assertEquals(35, trip1.calculatedFare)
         Assertions.assertEquals(25, trip2.calculatedFare)
@@ -129,7 +136,8 @@ class DailyCapFareHandlerTest {
                 toZone = ZONE_1
         )
 
-        fareCapHandler.handle(listOf(trip1, trip2, trip3, trip4, trip5, trip6))
+        val trips = listOf(trip1, trip2, trip3, trip4, trip5, trip6)
+        trips.forEach { fareCapHandler.handleTrip(it, trips) }
 
         Assertions.assertEquals(0, trip6.calculatedFare)
     }
@@ -172,7 +180,8 @@ class DailyCapFareHandlerTest {
                 toZone = ZONE_1
         )
 
-        fareCapHandler.handle(listOf(trip1, trip2, trip3, trip4, trip5))
+        val trips = listOf(trip1, trip2, trip3, trip4, trip5)
+        trips.forEach { fareCapHandler.handleTrip(it, trips) }
 
         Assertions.assertEquals(30, trip1.calculatedFare)
         Assertions.assertEquals(25, trip2.calculatedFare)
@@ -226,7 +235,8 @@ class DailyCapFareHandlerTest {
                 toZone = ZONE_1
         )
 
-        fareCapHandler.handle(listOf(trip1, trip2, trip3, trip4, trip5, trip6))
+        val trips = listOf(trip1, trip2, trip3, trip4, trip5, trip6)
+        trips.forEach { fareCapHandler.handleTrip(it, trips) }
 
         Assertions.assertEquals(30, trip1.calculatedFare)
         Assertions.assertEquals(25, trip2.calculatedFare)
@@ -247,8 +257,8 @@ class DailyCapFareHandlerTest {
                 toZone = ZONE_1
         ))
         fareCapHandler.setNext(handler = mockHandler)
-        fareCapHandler.handle(trips)
+        fareCapHandler.handleTrip(trips[0], trips)
 
-        Mockito.verify(mockHandler, Mockito.times(1)).handle(trips)
+        Mockito.verify(mockHandler, Mockito.times(1)).handleTrip(trips[0], trips)
     }
 }

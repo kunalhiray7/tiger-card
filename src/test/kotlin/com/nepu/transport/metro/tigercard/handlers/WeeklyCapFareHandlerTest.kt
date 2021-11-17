@@ -2,7 +2,6 @@ package com.nepu.transport.metro.tigercard.handlers
 
 import com.nepu.transport.metro.tigercard.domain.Trip
 import com.nepu.transport.metro.tigercard.domain.Zone
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -31,9 +30,9 @@ class WeeklyCapFareHandlerTest {
                 toZone = Zone.ZONE_1
         ))
         handler.setNext(handler = mockHandler)
-        handler.handleTrip(trips[0], trips, 0)
+        handler.handleTrip(trips[0], trips)
 
-        Mockito.verify(mockHandler, Mockito.times(1)).handleTrip(trips[0], trips, 0)
+        Mockito.verify(mockHandler, Mockito.times(1)).handleTrip(trips[0], trips)
     }
 
     @Test
@@ -47,7 +46,7 @@ class WeeklyCapFareHandlerTest {
                 calculatedFare = 35
         ))
 
-        handler.handleTrip(trips[0], trips, 0)
+        handler.handleTrip(trips[0], trips)
 
         assertEquals(35, trips[0].calculatedFare)
     }
@@ -61,7 +60,8 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_2,
-                        calculatedFare = 35
+                        calculatedFare = 120,
+                        baseFare = 35
                 ),
                 Trip(
                         commuterId = 1,
@@ -69,7 +69,8 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_2,
-                        calculatedFare = 35
+                        calculatedFare = 120,
+                        baseFare = 35
                 ),
                 Trip(
                         commuterId = 1,
@@ -77,7 +78,8 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_2,
-                        calculatedFare = 35
+                        calculatedFare = 120,
+                        baseFare = 35
                 ),
                 Trip(
                         commuterId = 1,
@@ -85,7 +87,8 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_2,
-                        calculatedFare = 35
+                        calculatedFare = 120,
+                        baseFare = 35
                 ),
                 Trip(
                         commuterId = 1,
@@ -93,7 +96,8 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_1,
-                        calculatedFare = 30
+                        calculatedFare = 120,
+                        baseFare = 30
                 ),
                 Trip(
                         commuterId = 1,
@@ -101,15 +105,16 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_2,
-                        calculatedFare = 35
+                        calculatedFare = 120,
+                        baseFare = 35
                 ))
 
-        handler.handleTrip(trips[0], trips, 120)
-        handler.handleTrip(trips[1], trips, 120)
-        handler.handleTrip(trips[2], trips, 120)
-        handler.handleTrip(trips[3], trips, 120)
-        handler.handleTrip(trips[4], trips, 120)
-        handler.handleTrip(trips[5], trips, 120)
+        handler.handleTrip(trips[0], trips)
+        handler.handleTrip(trips[1], trips)
+        handler.handleTrip(trips[2], trips)
+        handler.handleTrip(trips[3], trips)
+        handler.handleTrip(trips[4], trips)
+        handler.handleTrip(trips[5], trips)
 
         assertEquals(0, trips[5].calculatedFare)
     }
@@ -123,6 +128,7 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_2,
+                        calculatedFare = 120,
                         baseFare = 35
                 ),
                 Trip(
@@ -131,6 +137,7 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_2,
+                        calculatedFare = 120,
                         baseFare = 35
                 ),
                 Trip(
@@ -139,6 +146,7 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_2,
+                        calculatedFare = 120,
                         baseFare = 35
                 ),
                 Trip(
@@ -147,6 +155,7 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_2,
+                        calculatedFare = 120,
                         baseFare = 35
                 ),
                 Trip(
@@ -155,6 +164,7 @@ class WeeklyCapFareHandlerTest {
                                 0, 0, ZoneId.of("UTC")),
                         fromZone = Zone.ZONE_1,
                         toZone = Zone.ZONE_1,
+                        calculatedFare = 100,
                         baseFare = 30
                 ),
                 Trip(
@@ -166,12 +176,12 @@ class WeeklyCapFareHandlerTest {
                         baseFare = 35
                 ))
 
-        handler.handleTrip(trips[0], trips, 120)
-        handler.handleTrip(trips[1], trips, 120)
-        handler.handleTrip(trips[2], trips, 120)
-        handler.handleTrip(trips[3], trips, 120)
-        handler.handleTrip(trips[4], trips, 100)
-        handler.handleTrip(trips[5], trips, 120)
+        handler.handleTrip(trips[0], trips)
+        handler.handleTrip(trips[1], trips)
+        handler.handleTrip(trips[2], trips)
+        handler.handleTrip(trips[3], trips)
+        handler.handleTrip(trips[4], trips)
+        handler.handleTrip(trips[5], trips)
 
         assertEquals(20, trips[5].calculatedFare)
     }
@@ -236,13 +246,13 @@ class WeeklyCapFareHandlerTest {
                         baseFare = 35
                 ))
 
-        handler.handleTrip(trips[0], trips, 120)
-        handler.handleTrip(trips[1], trips, 120)
-        handler.handleTrip(trips[2], trips, 120)
-        handler.handleTrip(trips[3], trips, 120)
-        handler.handleTrip(trips[4], trips, 100)
-        handler.handleTrip(trips[5], trips, 120)
-        handler.handleTrip(trips[6], trips, 120)
+        handler.handleTrip(trips[0], trips)
+        handler.handleTrip(trips[1], trips)
+        handler.handleTrip(trips[2], trips)
+        handler.handleTrip(trips[3], trips)
+        handler.handleTrip(trips[4], trips)
+        handler.handleTrip(trips[5], trips)
+        handler.handleTrip(trips[6], trips)
 
         assertEquals(0, trips[6].calculatedFare)
     }
@@ -316,14 +326,14 @@ class WeeklyCapFareHandlerTest {
                         calculatedFare = 35
                 ))
 
-        handler.handleTrip(trips[0], trips, 120)
-        handler.handleTrip(trips[1], trips, 120)
-        handler.handleTrip(trips[2], trips, 120)
-        handler.handleTrip(trips[3], trips, 120)
-        handler.handleTrip(trips[4], trips, 100)
-        handler.handleTrip(trips[5], trips, 120)
-        handler.handleTrip(trips[6], trips, 120)
-        handler.handleTrip(trips[7], trips, 120)
+        handler.handleTrip(trips[0], trips)
+        handler.handleTrip(trips[1], trips)
+        handler.handleTrip(trips[2], trips)
+        handler.handleTrip(trips[3], trips)
+        handler.handleTrip(trips[4], trips)
+        handler.handleTrip(trips[5], trips)
+        handler.handleTrip(trips[6], trips)
+        handler.handleTrip(trips[7], trips)
 
         assertEquals(35, trips[7].calculatedFare)
     }

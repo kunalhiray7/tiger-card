@@ -1,6 +1,5 @@
 package com.nepu.transport.metro.tigercard.services
 
-import com.nepu.transport.metro.tigercard.domain.Trip
 import com.nepu.transport.metro.tigercard.dtos.TripFareCalculationRequest
 import com.nepu.transport.metro.tigercard.dtos.TripsFareCalculationResponse
 import com.nepu.transport.metro.tigercard.handlers.DailyCapFareHandler
@@ -16,7 +15,7 @@ class TripService {
         val trips = tripRequests.map { it.toDomainTrip() }.sortedBy { it.tripDateTime }
 
         trips.forEach {
-            handlerChain.handleTrip(it, trips, 0)
+            handlerChain.handleTrip(it, trips)
         }
 
         return TripsFareCalculationResponse(

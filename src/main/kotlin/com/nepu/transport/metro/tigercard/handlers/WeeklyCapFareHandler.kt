@@ -1,8 +1,14 @@
 package com.nepu.transport.metro.tigercard.handlers
 
 import com.nepu.transport.metro.tigercard.domain.Trip
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class WeeklyCapFareHandler : FareCapHandler {
+
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(WeeklyCapFareHandler::class.java)
+    }
 
     private lateinit var nextHandler: FareCapHandler
     private lateinit var maxCapWithNewWeekIndex: Pair<Int, Int>
@@ -12,12 +18,13 @@ class WeeklyCapFareHandler : FareCapHandler {
     private var firstDayProcessed = false
     private var firstDayOfTrip = ""
 
-    override fun handleTrip(currentTrip: Trip, allTrips: List<Trip>, totalDayFare: Int) {
+    override fun handleTrip(currentTrip: Trip, allTrips: List<Trip>) {
 
         currentDay = currentTrip.tripDateTime.dayOfWeek.name
         if (!this::maxCapWithNewWeekIndex.isInitialized) {
             maxCapWithNewWeekIndex = getMaxCapForTrips(allTrips, 0)
             firstDayOfTrip = allTrips[0].tripDateTime.dayOfWeek.name
+            logger.debug("Initial max weekly cap:: $maxCapWithNewWeekIndex")
         }
 
         if (currentDay == weekStartDay && firstDayProcessed) {
@@ -25,6 +32,7 @@ class WeeklyCapFareHandler : FareCapHandler {
             // get max cap for the new week trips
             weekFare = 0
             maxCapWithNewWeekIndex = getMaxCapForTrips(allTrips, maxCapWithNewWeekIndex.second)
+            logger.debug("New week started, new max weekly cap:: $maxCapWithNewWeekIndex")
         }
 
         if (weekFare + currentTrip.baseFare >= maxCapWithNewWeekIndex.first) {
@@ -32,14 +40,14 @@ class WeeklyCapFareHandler : FareCapHandler {
             currentTrip.remark += "Weekly cap reached. "
             weekFare = maxCapWithNewWeekIndex.first
         } else {
-            weekFare += totalDayFare
+            weekFare += currentTrip.calculatedFare
         }
         if (currentDay != firstDayOfTrip) {
             firstDayProcessed = true
         }
 
         if (this::nextHandler.isInitialized) {
-            nextHandler.handleTrip(currentTrip, allTrips, totalDayFare)
+            nextHandler.handleTrip(currentTrip, allTrips)
         }
     }
 

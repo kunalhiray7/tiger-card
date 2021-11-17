@@ -8,5 +8,6 @@ data class Trip(
         val fromZone: Zone,
         val toZone: Zone,
         var baseFare: Int = 0,
-        var calculatedFare: Int = 0
+        var calculatedFare: Int = 0,
+        var remark: String = "Base fare applied. "
 )

@@ -50,12 +50,12 @@ class TripServiceTest {
                 toZone = Zone.ZONE_2
         )
 
-        val calculatedTrips = service.process(listOf(trip1, trip2, trip3, trip4, trip5))
+        val tripsFareCalculationResponse = service.process(listOf(trip1, trip2, trip3, trip4, trip5))
 
-        assertEquals(35, calculatedTrips[0].calculatedFare)
-        assertEquals(25, calculatedTrips[1].calculatedFare)
-        assertEquals(25, calculatedTrips[2].calculatedFare)
-        assertEquals(30, calculatedTrips[3].calculatedFare)
-        assertEquals(5, calculatedTrips[4].calculatedFare)
+        assertEquals(35, tripsFareCalculationResponse.trips[0].calculatedFare)
+        assertEquals(25, tripsFareCalculationResponse.trips[1].calculatedFare)
+        assertEquals(25, tripsFareCalculationResponse.trips[2].calculatedFare)
+        assertEquals(30, tripsFareCalculationResponse.trips[3].calculatedFare)
+        assertEquals(5, tripsFareCalculationResponse.trips[4].calculatedFare)
     }
 }

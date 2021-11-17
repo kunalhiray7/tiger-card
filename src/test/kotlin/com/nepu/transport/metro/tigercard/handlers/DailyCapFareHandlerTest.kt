@@ -37,7 +37,7 @@ class DailyCapFareHandlerTest {
                 toZone = ZONE_2
         )
 
-        fareCapHandler.handleTrip(trip1, listOf(trip1, trip2))
+        fareCapHandler.handleTrip(trip1, listOf(trip1, trip2), 0)
 
         Assertions.assertEquals(35, trip1.calculatedFare)
     }
@@ -81,7 +81,7 @@ class DailyCapFareHandlerTest {
         )
 
         val trips = listOf(trip1, trip2, trip3, trip4, trip5)
-        trips.forEach { fareCapHandler.handleTrip(it, trips) }
+        trips.forEach { fareCapHandler.handleTrip(it, trips, 0)}
 
 
         Assertions.assertEquals(35, trip1.calculatedFare)
@@ -137,7 +137,7 @@ class DailyCapFareHandlerTest {
         )
 
         val trips = listOf(trip1, trip2, trip3, trip4, trip5, trip6)
-        trips.forEach { fareCapHandler.handleTrip(it, trips) }
+        trips.forEach { fareCapHandler.handleTrip(it, trips, 0)}
 
         Assertions.assertEquals(0, trip6.calculatedFare)
     }
@@ -181,7 +181,7 @@ class DailyCapFareHandlerTest {
         )
 
         val trips = listOf(trip1, trip2, trip3, trip4, trip5)
-        trips.forEach { fareCapHandler.handleTrip(it, trips) }
+        trips.forEach { fareCapHandler.handleTrip(it, trips, 0)}
 
         Assertions.assertEquals(30, trip1.calculatedFare)
         Assertions.assertEquals(25, trip2.calculatedFare)
@@ -236,7 +236,7 @@ class DailyCapFareHandlerTest {
         )
 
         val trips = listOf(trip1, trip2, trip3, trip4, trip5, trip6)
-        trips.forEach { fareCapHandler.handleTrip(it, trips) }
+        trips.forEach { fareCapHandler.handleTrip(it, trips, 0)}
 
         Assertions.assertEquals(30, trip1.calculatedFare)
         Assertions.assertEquals(25, trip2.calculatedFare)
@@ -257,8 +257,8 @@ class DailyCapFareHandlerTest {
                 toZone = ZONE_1
         ))
         fareCapHandler.setNext(handler = mockHandler)
-        fareCapHandler.handleTrip(trips[0], trips)
+        fareCapHandler.handleTrip(trips[0], trips, 0)
 
-        Mockito.verify(mockHandler, Mockito.times(1)).handleTrip(trips[0], trips)
+        Mockito.verify(mockHandler, Mockito.times(1)).handleTrip(trips[0], trips, 35)
     }
 }

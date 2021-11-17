@@ -9,7 +9,7 @@ class DailyCapFareHandler : FareCapHandler {
     private var dayFare: Int = 0
     private lateinit var currentDay: LocalDate
 
-    override fun handleTrip(currentTrip: Trip, allTrips: List<Trip>) {
+    override fun handleTrip(currentTrip: Trip, allTrips: List<Trip>, totalDayFare: Int) {
         currentTrip.baseFare = currentTrip.fromZone.getBaseFareTo(currentTrip.toZone, currentTrip.tripDateTime)
         currentTrip.calculatedFare = currentTrip.baseFare
 
@@ -28,13 +28,14 @@ class DailyCapFareHandler : FareCapHandler {
 
         if (dayFare + currentTrip.calculatedFare >= maxCapWithNewDayIndex.first) {
             currentTrip.calculatedFare = maxCapWithNewDayIndex.first - dayFare
+            currentTrip.remark += "Daily cap reached. "
             dayFare = maxCapWithNewDayIndex.first
         } else {
             dayFare += currentTrip.calculatedFare
         }
 
         if(this::nextHandler.isInitialized) {
-            nextHandler.handleTrip(currentTrip, allTrips)
+            nextHandler.handleTrip(currentTrip, allTrips, dayFare)
         }
     }
 

@@ -1,9 +1,12 @@
 package com.nepu.transport.metro.tigercard.handlers
 
 import com.nepu.transport.metro.tigercard.domain.Trip
+import org.slf4j.LoggerFactory
 import java.time.LocalDate
 
 class DailyCapFareHandler : FareCapHandler {
+
+    private val logger = LoggerFactory.getLogger(DailyCapFareHandler::class.java)
     private lateinit var nextHandler: FareCapHandler
     private lateinit var maxCapWithNewDayIndex: Pair<Int, Int>
     private var dayFare: Int = 0
@@ -16,6 +19,7 @@ class DailyCapFareHandler : FareCapHandler {
         if(!this::maxCapWithNewDayIndex.isInitialized && !this::currentDay.isInitialized) {
             maxCapWithNewDayIndex = getMaxCapForTrips(allTrips, 0)
             currentDay = currentTrip.tripDateTime.toLocalDate()
+            logger.debug("Initial daily max cap:: $maxCapWithNewDayIndex")
         }
 
         if (currentDay != currentTrip.tripDateTime.toLocalDate()) {
@@ -24,6 +28,7 @@ class DailyCapFareHandler : FareCapHandler {
             dayFare = 0
             currentDay = currentTrip.tripDateTime.toLocalDate()
             maxCapWithNewDayIndex = getMaxCapForTrips(allTrips, maxCapWithNewDayIndex.second)
+            logger.debug("New day started, new daily max cap:: $maxCapWithNewDayIndex")
         }
 
         if (dayFare + currentTrip.calculatedFare >= maxCapWithNewDayIndex.first) {

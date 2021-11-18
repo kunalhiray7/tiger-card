@@ -1,18 +1,16 @@
 package com.nepu.transport.metro.tigercard.handlers
 
+import com.nepu.transport.metro.tigercard.constants.AppConstants.Companion.WEEK_START_DAY
 import com.nepu.transport.metro.tigercard.domain.Trip
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class WeeklyCapFareHandler : FareCapHandler {
 
-    companion object {
-        val logger: Logger = LoggerFactory.getLogger(WeeklyCapFareHandler::class.java)
-    }
-
+    private val logger: Logger = LoggerFactory.getLogger(WeeklyCapFareHandler::class.java)
     private lateinit var nextHandler: FareCapHandler
     private lateinit var maxCapWithNewWeekIndex: Pair<Int, Int>
-    private val weekStartDay = "MONDAY"
+    private val weekStartDay = WEEK_START_DAY
     private var weekFare: Int = 0
     private var currentDay: String = ""
     private var firstDayProcessed = false

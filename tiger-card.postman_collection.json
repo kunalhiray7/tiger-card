@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "fc5480bb-d907-4bf5-8be3-207e4874e013",
+		"name": "tiger-card",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST /api/v1/trips - Simulate weekly cap scenario",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response Status should be 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Total calculated fare should be 700\", () => {",
+							"    const response = pm.response.json();",
+							"    ",
+							"    pm.expect(response.totalFareForAllTrips).to.eql(700);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_2\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-08T10:20:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-08T10:45:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-08T16:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-08T18:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_2\",\n    \"tripDateTime\": \"2021-11-08T19:00:00Z\"\n  },\n\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_2\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-09T10:20:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-09T10:45:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-09T16:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-09T18:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_2\",\n    \"tripDateTime\": \"2021-11-09T19:00:00Z\"\n  },\n\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_2\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-10T10:20:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-10T10:45:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-10T16:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-10T18:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_2\",\n    \"tripDateTime\": \"2021-11-10T19:00:00Z\"\n  },\n\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_2\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-11T10:20:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-11T10:45:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-11T16:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-11T18:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_2\",\n    \"tripDateTime\": \"2021-11-11T19:00:00Z\"\n  },\n  \n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-12T10:45:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-12T16:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-12T18:15:00Z\"\n  },\n\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_2\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-13T10:20:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-13T10:45:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-13T16:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-13T18:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_2\",\n    \"tripDateTime\": \"2021-11-13T19:00:00Z\"\n  },\n\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_2\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-14T10:20:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-14T10:45:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-14T16:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-14T18:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_2\",\n    \"tripDateTime\": \"2021-11-14T19:00:00Z\"\n  },\n\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-15T10:40:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-15T10:45:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-15T16:15:00Z\"\n  },\n  {\n    \"commuterId\": 1,\n    \"fromZone\": \"ZONE_1\",\n    \"toZone\": \"ZONE_1\",\n    \"tripDateTime\": \"2021-11-15T16:20:00Z\"\n  }\n]\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/trips",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"trips"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /api/v1/trips - Simulate daily cap scenario",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response Status should be 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Total calculated fare should be 700\", () => {",
+							"    const response = pm.response.json();",
+							"    ",
+							"    pm.expect(response.totalFareForAllTrips).to.eql(120);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"commuterId\": 1,\n        \"fromZone\": \"ZONE_2\",\n        \"toZone\": \"ZONE_1\",\n        \"tripDateTime\": \"2021-11-08T10:20:00Z\"\n    },\n    {\n        \"commuterId\": 1,\n        \"fromZone\": \"ZONE_1\",\n        \"toZone\": \"ZONE_1\",\n        \"tripDateTime\": \"2021-11-08T10:45:00Z\"\n    },\n    {\n        \"commuterId\": 1,\n        \"fromZone\": \"ZONE_1\",\n        \"toZone\": \"ZONE_1\",\n        \"tripDateTime\": \"2021-11-08T16:15:00Z\"\n    },\n    {\n        \"commuterId\": 1,\n        \"fromZone\": \"ZONE_1\",\n        \"toZone\": \"ZONE_1\",\n        \"tripDateTime\": \"2021-11-08T18:15:00Z\"\n    },\n    {\n        \"commuterId\": 1,\n        \"fromZone\": \"ZONE_1\",\n        \"toZone\": \"ZONE_2\",\n        \"tripDateTime\": \"2021-11-08T19:00:00Z\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/trips",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"trips"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

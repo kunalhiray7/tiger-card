@@ -57,5 +57,13 @@ class TripServiceTest {
         assertEquals(25, tripsFareCalculationResponse.trips[2].calculatedFare)
         assertEquals(30, tripsFareCalculationResponse.trips[3].calculatedFare)
         assertEquals(5, tripsFareCalculationResponse.trips[4].calculatedFare)
+        assertEquals(120, tripsFareCalculationResponse.totalFareForAllTrips)
+    }
+
+    @Test
+    fun `should return zero as total fare if no trip is provided in the request`() {
+        val tripsFareCalculationResponse = service.process(emptyList())
+
+        assertEquals(0, tripsFareCalculationResponse.totalFareForAllTrips)
     }
 }

@@ -17,9 +17,7 @@ class DailyCapFareHandler : FareCapHandler {
         currentTrip.calculatedFare = currentTrip.baseFare
 
         if(!this::maxCapWithNewDayIndex.isInitialized && !this::currentDay.isInitialized) {
-            maxCapWithNewDayIndex = getMaxCapForTrips(allTrips, 0)
-            currentDay = currentTrip.tripDateTime.toLocalDate()
-            logger.debug("Initial daily max cap:: $maxCapWithNewDayIndex")
+            initializeMaxCap(allTrips, currentTrip)
         }
 
         if (currentDay != currentTrip.tripDateTime.toLocalDate()) {
@@ -27,17 +25,11 @@ class DailyCapFareHandler : FareCapHandler {
             // get max cap for the same day trips
             dayFare = 0
             currentDay = currentTrip.tripDateTime.toLocalDate()
-            maxCapWithNewDayIndex = getMaxCapForTrips(allTrips, maxCapWithNewDayIndex.second)
+            maxCapWithNewDayIndex = getMaxCapForDay(allTrips, maxCapWithNewDayIndex.second)
             logger.debug("New day started, new daily max cap:: $maxCapWithNewDayIndex")
         }
 
-        if (dayFare + currentTrip.calculatedFare >= maxCapWithNewDayIndex.first) {
-            currentTrip.calculatedFare = maxCapWithNewDayIndex.first - dayFare
-            currentTrip.remark += "Daily cap reached. "
-            dayFare = maxCapWithNewDayIndex.first
-        } else {
-            dayFare += currentTrip.calculatedFare
-        }
+        dayFare = updateFare(dayFare, currentTrip, maxCapWithNewDayIndex, "Daily")
 
         if(this::nextHandler.isInitialized) {
             nextHandler.handleTrip(currentTrip, allTrips)
@@ -48,7 +40,20 @@ class DailyCapFareHandler : FareCapHandler {
         nextHandler = handler
     }
 
-    private fun getMaxCapForTrips(trips: List<Trip>, newDayIndex: Int): Pair<Int, Int> {
+    private fun initializeMaxCap(allTrips: List<Trip>, currentTrip: Trip) {
+        maxCapWithNewDayIndex = getMaxCapForDay(allTrips, 0)
+        currentDay = currentTrip.tripDateTime.toLocalDate()
+        logger.debug("Initial daily max cap:: $maxCapWithNewDayIndex")
+    }
+
+    /**
+     * Determines the maximum cap applicable for the trips in a day.
+     * Returns the Pair<Int, Int> where first element is maximum applicable cap
+     * and second element is the index of the trip at which new day starts.
+     * The index is required to compute max applicable cap for a particular day and not for
+     * all the trips in the list.
+     */
+    private fun getMaxCapForDay(trips: List<Trip>, newDayIndex: Int): Pair<Int, Int> {
         var maxCap = 0
         val subTrips = trips.subList(newDayIndex, trips.size)
         val day = subTrips[0].tripDateTime.toLocalDate()

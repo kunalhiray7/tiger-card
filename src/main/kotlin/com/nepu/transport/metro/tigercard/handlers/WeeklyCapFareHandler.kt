@@ -17,29 +17,21 @@ class WeeklyCapFareHandler : FareCapHandler {
     private var firstDayOfTrip = ""
 
     override fun handleTrip(currentTrip: Trip, allTrips: List<Trip>) {
-
         currentDay = currentTrip.tripDateTime.dayOfWeek.name
         if (!this::maxCapWithNewWeekIndex.isInitialized) {
-            maxCapWithNewWeekIndex = getMaxCapForTrips(allTrips, 0)
-            firstDayOfTrip = allTrips[0].tripDateTime.dayOfWeek.name
-            logger.debug("Initial max weekly cap:: $maxCapWithNewWeekIndex")
+            initializeMaxCap(allTrips)
         }
 
         if (currentDay == weekStartDay && firstDayProcessed) {
             // new week
             // get max cap for the new week trips
             weekFare = 0
-            maxCapWithNewWeekIndex = getMaxCapForTrips(allTrips, maxCapWithNewWeekIndex.second)
+            maxCapWithNewWeekIndex = getMaxCapForWeek(allTrips, maxCapWithNewWeekIndex.second)
             logger.debug("New week started, new max weekly cap:: $maxCapWithNewWeekIndex")
         }
 
-        if (weekFare + currentTrip.baseFare >= maxCapWithNewWeekIndex.first) {
-            currentTrip.calculatedFare = maxCapWithNewWeekIndex.first - weekFare
-            currentTrip.remark += "Weekly cap reached. "
-            weekFare = maxCapWithNewWeekIndex.first
-        } else {
-            weekFare += currentTrip.calculatedFare
-        }
+        weekFare = updateFare(weekFare, currentTrip, maxCapWithNewWeekIndex, "Weekly")
+
         if (currentDay != firstDayOfTrip) {
             firstDayProcessed = true
         }
@@ -53,7 +45,20 @@ class WeeklyCapFareHandler : FareCapHandler {
         nextHandler = handler
     }
 
-    private fun getMaxCapForTrips(trips: List<Trip>, newWeekIndex: Int): Pair<Int, Int> {
+    private fun initializeMaxCap(allTrips: List<Trip>) {
+        maxCapWithNewWeekIndex = getMaxCapForWeek(allTrips, 0)
+        firstDayOfTrip = allTrips[0].tripDateTime.dayOfWeek.name
+        logger.debug("Initial max weekly cap:: $maxCapWithNewWeekIndex")
+    }
+
+    /**
+     * Determines the maximum cap applicable for the trips in a week.
+     * Returns the Pair<Int, Int> where first element is maximum applicable cap
+     * and second element is the index of the trip at which new week starts.
+     * The index is required to compute max applicable cap for a particular week and not for
+     * all the trips in the list.
+     */
+    private fun getMaxCapForWeek(trips: List<Trip>, newWeekIndex: Int): Pair<Int, Int> {
         var maxCap = 0
         val subTrips = trips.subList(newWeekIndex, trips.size)
         var day = subTrips[0].tripDateTime.dayOfWeek.name

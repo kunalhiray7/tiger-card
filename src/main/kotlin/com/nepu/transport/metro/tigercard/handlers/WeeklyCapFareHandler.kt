@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 class WeeklyCapFareHandler : FareCapHandler {
 
     private val logger: Logger = LoggerFactory.getLogger(WeeklyCapFareHandler::class.java)
-    private lateinit var nextHandler: FareCapHandler
+    private var nextHandler: FareCapHandler? = null
     private lateinit var maxCapWithNewWeekIndex: Pair<Int, Int>
     private val weekStartDay = WEEK_START_DAY
     private var weekFare: Int = 0
@@ -23,11 +23,7 @@ class WeeklyCapFareHandler : FareCapHandler {
         }
 
         if (currentDay == weekStartDay && firstDayProcessed) {
-            // new week
-            // get max cap for the new week trips
-            weekFare = 0
-            maxCapWithNewWeekIndex = getMaxCapForWeek(allTrips, maxCapWithNewWeekIndex.second)
-            logger.debug("New week started, new max weekly cap:: $maxCapWithNewWeekIndex")
+            startNewWeek(allTrips)
         }
 
         weekFare = updateFare(weekFare, currentTrip, maxCapWithNewWeekIndex, "Weekly")
@@ -36,19 +32,25 @@ class WeeklyCapFareHandler : FareCapHandler {
             firstDayProcessed = true
         }
 
-        if (this::nextHandler.isInitialized) {
-            nextHandler.handleTrip(currentTrip, allTrips)
-        }
+        handleNext(currentTrip, allTrips)
     }
 
     override fun setNext(handler: FareCapHandler) {
         nextHandler = handler
     }
 
+    override fun getNext() = nextHandler
+
     private fun initializeMaxCap(allTrips: List<Trip>) {
         maxCapWithNewWeekIndex = getMaxCapForWeek(allTrips, 0)
         firstDayOfTrip = allTrips[0].tripDateTime.dayOfWeek.name
         logger.debug("Initial max weekly cap:: $maxCapWithNewWeekIndex")
+    }
+
+    private fun startNewWeek(allTrips: List<Trip>) {
+        weekFare = 0
+        maxCapWithNewWeekIndex = getMaxCapForWeek(allTrips, maxCapWithNewWeekIndex.second)
+        logger.debug("New week started, new max weekly cap:: $maxCapWithNewWeekIndex")
     }
 
     /**

@@ -7,7 +7,7 @@ import java.time.LocalDate
 class DailyCapFareHandler : FareCapHandler {
 
     private val logger = LoggerFactory.getLogger(DailyCapFareHandler::class.java)
-    private lateinit var nextHandler: FareCapHandler
+    private var nextHandler: FareCapHandler? = null
     private lateinit var maxCapWithNewDayIndex: Pair<Int, Int>
     private var dayFare: Int = 0
     private lateinit var currentDay: LocalDate
@@ -21,29 +21,31 @@ class DailyCapFareHandler : FareCapHandler {
         }
 
         if (currentDay != currentTrip.tripDateTime.toLocalDate()) {
-            // new day
-            // get max cap for the same day trips
-            dayFare = 0
-            currentDay = currentTrip.tripDateTime.toLocalDate()
-            maxCapWithNewDayIndex = getMaxCapForDay(allTrips, maxCapWithNewDayIndex.second)
-            logger.debug("New day started, new daily max cap:: $maxCapWithNewDayIndex")
+            startNewDay(currentTrip, allTrips)
         }
 
         dayFare = updateFare(dayFare, currentTrip, maxCapWithNewDayIndex, "Daily")
 
-        if(this::nextHandler.isInitialized) {
-            nextHandler.handleTrip(currentTrip, allTrips)
-        }
+        handleNext(currentTrip, allTrips)
     }
 
     override fun setNext(handler: FareCapHandler) {
         nextHandler = handler
     }
 
+    override fun getNext() = nextHandler
+
     private fun initializeMaxCap(allTrips: List<Trip>, currentTrip: Trip) {
         maxCapWithNewDayIndex = getMaxCapForDay(allTrips, 0)
         currentDay = currentTrip.tripDateTime.toLocalDate()
         logger.debug("Initial daily max cap:: $maxCapWithNewDayIndex")
+    }
+
+    private fun startNewDay(currentTrip: Trip, allTrips: List<Trip>) {
+        dayFare = 0
+        currentDay = currentTrip.tripDateTime.toLocalDate()
+        maxCapWithNewDayIndex = getMaxCapForDay(allTrips, maxCapWithNewDayIndex.second)
+        logger.debug("New day started, new daily max cap:: $maxCapWithNewDayIndex")
     }
 
     /**

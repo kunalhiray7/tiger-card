@@ -4,8 +4,8 @@ import com.nepu.transport.metro.tigercard.domain.Trip
 
 interface FareCapHandler {
     fun handleTrip(currentTrip: Trip, allTrips: List<Trip>)
-
     fun setNext(handler: FareCapHandler)
+    fun getNext(): FareCapHandler?
 
     fun updateFare(consolidatedFare: Int, currentTrip: Trip, maxCapWithIndex: Pair<Int, Int>, capType: String): Int =
             if (consolidatedFare + currentTrip.baseFare >= maxCapWithIndex.first) {
@@ -15,4 +15,8 @@ interface FareCapHandler {
             } else {
                 consolidatedFare + currentTrip.calculatedFare
             }
+
+    fun handleNext(currentTrip: Trip, allTrips: List<Trip>) {
+        getNext()?.handleTrip(currentTrip, allTrips)
+    }
 }

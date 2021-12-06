@@ -19,8 +19,8 @@ import com.nepu.transport.metro.tigercard.constants.AppConstants.Companion.ZONE_
 import com.nepu.transport.metro.tigercard.utils.PeakHoursDecider.Companion.isInPeakHours
 import java.time.ZonedDateTime
 
-enum class Zone(value: Int) {
-    ZONE_1(1) {
+enum class Zone {
+    ZONE_1 {
         override fun getBaseFareTo(toZone: Zone, time: ZonedDateTime) =
                 when (toZone) {
                     ZONE_1 -> if (isInPeakHours(time)) ZONE_1_TO_ZONE_1_PEAK_HOUR_FARE else ZONE_1_TO_ZONE_1_OFF_PEAK_HOUR_FARE
@@ -40,7 +40,7 @@ enum class Zone(value: Int) {
                 }
     },
 
-    ZONE_2(2) {
+    ZONE_2 {
         override fun getBaseFareTo(toZone: Zone, time: ZonedDateTime) =
                 when (toZone) {
                     ZONE_1 -> if (isInPeakHours(time)) ZONE_2_TO_ZONE_1_PEAK_HOUR_FARE else ZONE_2_TO_ZONE_1_OFF_PEAK_HOUR_FARE

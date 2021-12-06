@@ -13,7 +13,6 @@ class WeeklyCapFareHandler : FareCapHandler {
     private val weekStartDay = WEEK_START_DAY
     private var weekFare: Int = 0
     private var currentDay: String = ""
-    private var firstDayProcessed = false
     private var firstDayOfTrip = ""
 
     override fun handleTrip(currentTrip: Trip, allTrips: List<Trip>) {
@@ -22,15 +21,12 @@ class WeeklyCapFareHandler : FareCapHandler {
             initializeMaxCap(allTrips)
         }
 
-        if (currentDay == weekStartDay && firstDayProcessed) {
+        if (currentDay == weekStartDay && currentDay != firstDayOfTrip) {
+            // If the first day of the trips is also the week start day i.e. Monday, don't consider this as a new week.
             startNewWeek(allTrips)
         }
 
         weekFare = updateFare(weekFare, currentTrip, maxCapWithNewWeekIndex, "Weekly")
-
-        if (currentDay != firstDayOfTrip) {
-            firstDayProcessed = true
-        }
 
         handleNext(currentTrip, allTrips)
     }

@@ -3,7 +3,8 @@ package com.nepu.transport.metro.tigercard.controllers
 import com.nepu.transport.metro.tigercard.controllers.MessageConverter.jacksonDateTimeConverter
 import com.nepu.transport.metro.tigercard.domain.Zone.ZONE_1
 import com.nepu.transport.metro.tigercard.dtos.TripFareCalculationRequest
-import com.nepu.transport.metro.tigercard.dtos.TripsFareCalculationResponse
+import com.nepu.transport.metro.tigercard.dtos.ConsolidatedTripsFareCalculationResponse
+import com.nepu.transport.metro.tigercard.dtos.Mapper
 import com.nepu.transport.metro.tigercard.services.TripService
 import com.nepu.transport.metro.tigercard.utils.ObjectMapperUtil.getObjectMapper
 import org.junit.jupiter.api.BeforeEach
@@ -24,7 +25,7 @@ import java.time.ZonedDateTime
 @SpringBootTest
 class TripControllerTest {
 
-    private val mapper = getObjectMapper()
+    private val objectMapper = getObjectMapper()
     private lateinit var mockMvc: MockMvc
 
     @Mock
@@ -40,14 +41,15 @@ class TripControllerTest {
 
     @Test
     fun `POST should call the endpoint to calculate the fare`() {
+        val mapper = Mapper()
         val request = listOf(TripFareCalculationRequest(1, ZONE_1, ZONE_1, ZonedDateTime.now(ZoneId.of("UTC"))))
-        val response = TripsFareCalculationResponse(35, request.map { it.toDomainTrip() })
+        val response = ConsolidatedTripsFareCalculationResponse(35, request.map { mapper.toTripFareCalculationResponse(mapper.toDomainTrip(it)) })
         doReturn(response).`when`(tripService).process(request)
 
         mockMvc.perform(post("/api/v1/trips")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(request)))
-                .andExpect(content().string(mapper.writeValueAsString(response)))
+                    .content(objectMapper.writeValueAsString(request)))
+                .andExpect(content().string(objectMapper.writeValueAsString(response)))
                 .andExpect(status().isOk)
 
         verify(tripService, times(1)).process(request)

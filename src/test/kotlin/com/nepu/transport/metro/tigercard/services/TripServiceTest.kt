@@ -1,6 +1,7 @@
 package com.nepu.transport.metro.tigercard.services
 
 import com.nepu.transport.metro.tigercard.domain.Zone
+import com.nepu.transport.metro.tigercard.dtos.Mapper
 import com.nepu.transport.metro.tigercard.dtos.TripFareCalculationRequest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -10,7 +11,7 @@ import java.time.ZonedDateTime
 
 class TripServiceTest {
 
-    private val service = TripService()
+    private val service = TripService(Mapper())
 
     @Test
     fun `should handle the request trips and return the trips with calculated fare`() {

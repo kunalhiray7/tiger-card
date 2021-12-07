@@ -4,6 +4,7 @@ import com.nepu.transport.metro.tigercard.constants.AppConstants.Companion.WEEK_
 import com.nepu.transport.metro.tigercard.domain.Trip
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.time.LocalDate
 
 class WeeklyCapFareHandler : FareCapHandler {
 
@@ -12,17 +13,20 @@ class WeeklyCapFareHandler : FareCapHandler {
     private lateinit var maxCapWithNewWeekIndex: Pair<Int, Int>
     private val weekStartDay = WEEK_START_DAY
     private var weekFare: Int = 0
-    private var currentDay: String = ""
-    private var firstDayOfTrip = ""
+    private var currentDay: LocalDate? = null
+    private var firstDayOfTrip:LocalDate? = null
 
     override fun handleTrip(currentTrip: Trip, allTrips: List<Trip>) {
-        currentDay = currentTrip.tripDateTime.dayOfWeek.name
+        currentDay = currentTrip.tripDateTime.toLocalDate()
         if (!this::maxCapWithNewWeekIndex.isInitialized) {
             initializeMaxCap(allTrips)
         }
 
-        if (currentDay == weekStartDay && currentDay != firstDayOfTrip) {
-            // If the first day of the trips is also the week start day i.e. Monday, don't consider this as a new week.
+        if (currentDay?.dayOfWeek?.name == weekStartDay && currentDay != firstDayOfTrip) {
+            /*
+            If the day of the first element in the allTrips is also a week start day i.e. Monday, then we do not want
+            to consider it as a new week.
+             */
             startNewWeek(allTrips)
         }
 
@@ -39,7 +43,7 @@ class WeeklyCapFareHandler : FareCapHandler {
 
     private fun initializeMaxCap(allTrips: List<Trip>) {
         maxCapWithNewWeekIndex = getMaxCapForWeek(allTrips, 0)
-        firstDayOfTrip = allTrips[0].tripDateTime.dayOfWeek.name
+        firstDayOfTrip = allTrips[0].tripDateTime.toLocalDate()
         logger.debug("Initial max weekly cap:: $maxCapWithNewWeekIndex")
     }
 
@@ -59,12 +63,11 @@ class WeeklyCapFareHandler : FareCapHandler {
     private fun getMaxCapForWeek(trips: List<Trip>, newWeekIndex: Int): Pair<Int, Int> {
         var maxCap = 0
         val subTrips = trips.subList(newWeekIndex, trips.size)
-        var day = subTrips[0].tripDateTime.dayOfWeek.name
-        val firstDayOfTrip = subTrips[0].tripDateTime.dayOfWeek.name
-        var firstDayProcessed = false
+        val firstDayOfTrip = subTrips[0].tripDateTime.toLocalDate()
+        var day = firstDayOfTrip
 
         subTrips.forEachIndexed { index, trip ->
-            if (day != weekStartDay || !firstDayProcessed) {
+            if (day.dayOfWeek.name != weekStartDay || day == firstDayOfTrip) {
                 val weeklyCapSingleTrip = trip.fromZone.getWeeklyCapTo(trip.toZone)
                 if (weeklyCapSingleTrip > maxCap) {
                     maxCap = weeklyCapSingleTrip
@@ -72,10 +75,7 @@ class WeeklyCapFareHandler : FareCapHandler {
             } else {
                 return Pair(maxCap, index)
             }
-            day = trip.tripDateTime.dayOfWeek.name
-            if (day != firstDayOfTrip) {
-                firstDayProcessed = true
-            }
+            day = trip.tripDateTime.toLocalDate()
         }
 
         return Pair(maxCap, trips.lastIndex)

@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "POST /api/v1/trips - Simulate weekly cap scenario",
+			"name": "PUT /api/v1/fare-calculations/trips - Simulate weekly cap scenario",
 			"event": [
 				{
 					"listen": "test",
@@ -27,7 +27,7 @@
 				}
 			],
 			"request": {
-				"method": "POST",
+				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -39,7 +39,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/trips",
+					"raw": "http://localhost:8080/api/v1/fare-calculations/trips",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -48,6 +48,7 @@
 					"path": [
 						"api",
 						"v1",
+						"fare-calculations",
 						"trips"
 					]
 				}
@@ -55,7 +56,7 @@
 			"response": []
 		},
 		{
-			"name": "POST /api/v1/trips - Simulate daily cap scenario",
+			"name": "PUT /api/v1/fare-calculations/trips - Simulate daily cap scenario",
 			"event": [
 				{
 					"listen": "test",
@@ -76,7 +77,7 @@
 				}
 			],
 			"request": {
-				"method": "POST",
+				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -88,7 +89,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/trips",
+					"raw": "http://localhost:8080/api/v1/fare-calculations/trips",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -97,6 +98,7 @@
 					"path": [
 						"api",
 						"v1",
+						"fare-calculations",
 						"trips"
 					]
 				}
